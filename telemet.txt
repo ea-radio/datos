@@ -5,21 +5,14 @@ import json
 import MySQLdb
 import time
 
-tiempo = 0
-
 telemetria = serial.Serial('/dev/ttyUSB0',9600, timeout=0)
 
 if telemetria.isOpen():
         telemetria.close()
 telemetria.open()
 telemetria.isOpen()
-print 'Puerto serie abierto'
-#tiempo = raw_input ("Tiempo entre adquisiciones: ")
-
-#recibido = telemetria.readline()
 
 while True:
-    time.sleep(5)
     telemetria.write("1")
     character= telemetria.readline()
     MyJson = character
