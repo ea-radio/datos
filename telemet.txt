@@ -5,15 +5,19 @@ import json
 import MySQLdb
 import time
 
-telemetria = serial.Serial('/dev/ttyUSB0',9600, timeout=0)
+telemetria = serial.Serial('/dev/ttyUSB0',9600, timeout=5)
 
 if telemetria.isOpen():
         telemetria.close()
 telemetria.open()
 telemetria.isOpen()
+print 'Puerto serie abierto'
+print
 
+#while True:
 telemetria.write("1")
 character= telemetria.readline()
+print "Cadena recibida:", character
 MyJson = character
 db = MySQLdb.connect(host="localhost",
                      user="root",
@@ -22,11 +26,15 @@ db = MySQLdb.connect(host="localhost",
 if character != '\n':
     try:
         data=json.loads(character)
-        print data
+        print "Json formateado:", data
         curs = db.cursor()
-        curs.execute("INSERT INTO valores(fecha,Vbat1,Vbat2,Vps1,Ips1,Vps2,$
+        curs.execute("INSERT INTO valores(fecha,Vbat1,Vbat2,Vps1,Ips1,Vps2,Ips2,Vsal,Isal,Tbat,Text) VALUES (now(),"+str(data['VB1'])+","+str(data['VB2'])+","+str(data['VP1'])+","+str(data['IP1'])+","+str(data['VP2'])+","+str(data['IP2'])+","+str(data['VSA'])+","+str(data['ISA'])+","+str(data['TB'])+","+str(data['TE'])+")")
         db.commit()
     except ValueError:
-        print "error en el valor"
+        print "ERROR en la cadena recibida"
+
 
 telemetria.close()
+print
+print "Puerto serie cerrado"
+print "Comunicacion OK"
