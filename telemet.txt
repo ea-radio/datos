@@ -12,22 +12,21 @@ if telemetria.isOpen():
 telemetria.open()
 telemetria.isOpen()
 
-while True:
-    telemetria.write("1")
-    character= telemetria.readline()
-    MyJson = character
-    db = MySQLdb.connect(host="localhost",
-                         user="root",
-                         passwd="******",
-                         db="peg*****ar")
-    if character != '\n':
-        try:
-            data=json.loads(character)
-            print data
-            curs = db.cursor()
-            curs.execute("INSERT INTO valores(fecha,Vbat1,Vbat2,Vps1,Ips1,Vps2,$
-            db.commit()
-        except ValueError:
-            print "error en el valor"
+telemetria.write("1")
+character= telemetria.readline()
+MyJson = character
+db = MySQLdb.connect(host="localhost",
+                     user="root",
+                     passwd="******",
+                     db="peg*****ar")
+if character != '\n':
+    try:
+        data=json.loads(character)
+        print data
+        curs = db.cursor()
+        curs.execute("INSERT INTO valores(fecha,Vbat1,Vbat2,Vps1,Ips1,Vps2,$
+        db.commit()
+    except ValueError:
+        print "error en el valor"
 
 telemetria.close()
